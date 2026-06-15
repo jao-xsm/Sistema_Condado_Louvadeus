@@ -24,3 +24,12 @@ class CadastroHospedeSchema(BaseModel):
             raise ValueError("Apenas usuários com mais de 18 anos podem se cadastrar como hóspedes.")
         
         return valor_data
+    
+class LoginRequest(BaseModel):
+    email: EmailStr
+    senha: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    tipo_usuario: str
