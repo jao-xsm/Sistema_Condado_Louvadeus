@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from src.routes.usuario_route import router as usuario_router
+from src.routes.chale_route import router as chale_router
 
 app = FastAPI(
     title="API - Condado Louvadeus",
@@ -8,6 +9,7 @@ app = FastAPI(
 )
 
 app.include_router(usuario_router)
+app.include_router(chale_router)
 
 #para testar se esta no ar
 @app.get("/", tags=["Status"])
