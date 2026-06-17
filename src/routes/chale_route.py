@@ -1,6 +1,7 @@
 import os
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
+from typing import List
 import jwt
 from sqlalchemy.orm import Session
 from src.database import get_db
@@ -41,3 +42,11 @@ def cadastrar_chale(chale_data: ChaleCreate, db: Session = Depends(get_db)):
 # @router.post("/", response_model=ChaleResponse, status_code=status.HTTP_201_CREATED)
 # def cadastrar_chale(chale_data: ChaleCreate, db: Session = Depends(get_db), anfitriao_id: int = Depends(verificar_anfitriao)):
 #     return chale_controller.criar_chale(db=db, chale_data=chale_data, anfitriao_id=anfitriao_id)
+
+@router.get("/", response_model=List[ChaleResponse], status_code=status.HTTP_200_OK)
+def listar_chales(db: Session = Depends(get_db)):
+    return chale_controller.listar_chales(db=db)
+
+@router.get("/{chale_id}", response_model=ChaleResponse, status_code=status.HTTP_200_OK)
+def obter_info_chale(chale_id: int, db: Session = Depends(get_db)):
+    return chale_controller.obter_chale_por_id(db=db, chale_id=chale_id)

@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException, status
 from src.models.usuario import Usuario
 from src.models.chale import Chale, ChaleFoto
@@ -67,3 +67,16 @@ def criar_chale(db: Session, chale_data: ChaleCreate, anfitriao_id: int):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Erro interno ao cadastrar o chalé: {str(erro)}"
         )
+    
+def listar_chales(db: Session):
+    return db.query(Chale).options(joinedload(Chale.fotos)).filter(Chale.ativo==True).all()
+
+def obter_chale_por_id(db: Session, chale_id: int):
+    chale = db.query(Chale).options(joinedload(Chale.fotos)).filter(Chale.id == chale_id).first()
+
+    if not chale:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Chalé não encontrado ou indisponível"
+        )
+    return chale
