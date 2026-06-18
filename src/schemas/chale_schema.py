@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
-class ChaleFotoSchema(BaseModel):
+class ChaleFotoResponse(BaseModel):
     id: int
     url: str
 
@@ -36,7 +36,7 @@ class ChaleResponse(ChaleBase):
     quant_camas: int
     ativo: bool
     foto_capa: Optional[str]
-    galeria_fotos: List[ChaleFotoSchema] = []
+    fotos: List[ChaleFotoResponse] = []
 
     class Config:
         from_attributes = True
