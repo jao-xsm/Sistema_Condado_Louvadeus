@@ -1,0 +1,1 @@
+// login, logout, cadastro (tudo relacionado ao usuário
