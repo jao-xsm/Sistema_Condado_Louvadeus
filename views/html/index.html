@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Condado Louvadeus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+        font-family: Arial, sans-serif;
+        background-color: #f0ede6;
+    }
+    nav{
+        background-color: #d9d6cf;
+        padding: 18px 48px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .insta {
+        background-color: #3a5a28;
+        padding: 6px 24px;
+    }
+    .navLinks ul {
+        display: flex;
+        gap: 35px;
+        list-style: none;
+        text-decoration: none;
+    }
+    .navLinks a {
+        text-decoration: none;
+        color: #1a1a1a;
+        font-size: 15px;
+    }
+    .logo{
+        text-decoration: none;
+        color: #3a5a28;
+        font-size: 20px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    main{
+        padding: 0;
+        width: 100%;
+    }
+    .hero{
+        position: relative;
+        height: 500px;
+    }
+    .carrossel{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+    .slide{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    .slide.ativo{
+        opacity: 1;
+    }
+    .hero::before { 
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 0;
+    }
+    .heroTexto{
+        position: relative;
+        z-index: 1;
+         display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        padding: 40px;
+    }
+    .heroTexto h1{
+        color: white;
+        font-family: 'Playfair Display', serif;
+        font-size: 32px;
+        margin-bottom: 16px;
+    }
+    .heroTexto p {
+        color: white;
+        font-size: 16px;
+        margin-bottom: 32px;
+    }
+    .btnReservar {
+        background-color: transparent;
+        color: white;
+        padding: 12px 32px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        border: 2px solid white;
+    }
+    .btnReservar:hover {
+        background-color: white;
+        color: #3a5a28;
+    }    
+    .comodidades{
+        padding: 80px 48px;
+        text-align: center;
+    }
+    .comodidades h2{
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+    .comodidades > p{
+        font-size: 15px;
+        color: #555;
+        margin-bottom: 48px;
+    }
+    .gridComodidades{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    .cards{
+        background-color: #b2d9aa;
+        border-radius: 25px;
+        padding: 40px 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+    .cards img {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+    }
+    .cards p{
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    footer{
+        background-color: #d9d6cf;
+        padding: 48px;
+    }
+    footer ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    footer h4 {
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 14px;
+    }
+    footer a {
+        text-decoration: none;
+        color: #1a1a1a;
+        margin-bottom: 14px;
+    }
+    .footerColunas {
+        display: flex;
+        gap: 80px;
+        align-items: flex-start;
+    }
+    .footerLinks {
+        display: flex;
+        gap: 40px;
+    }
+    hr {
+        border: none;
+        border-top: 1px solid #b0aca5;
+        margin: 32px 0 16px;
+    }
+  </style>
+</head>
+<body>
+    <div class="insta">
+            <a href="https://www.instagram.com/restaurantecondadolouvadeus" target="_blank">
+            <img src="../img/instagramBranco.webp" alt="Instagram" width="18" height="18">
+        </a>
+    </div>
+    <nav>       
+        <div>
+            <a href="index.html" class="logo">Pousada Condado Louvadeus</a>  
+        </div>
+        
+        <div class="navLinks">
+            <ul>
+                <li> <a href="index.html">Inicio</a> </li>
+                <li> <a href="acomodacoes.html">Acomodações</a> </li>
+                <li> <a href="comoChegar.html">Como chegar</a> </li>
+                <li> <a href="contato.html">Contato</a> </li>
+                <li> <a href="login.html">Fazer login</a> </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>       
+       <section class="hero"> <!--fotos-->
+            <div class="carrossel">
+                <img src="../img/carrossel/ft1.png" class="slide ativo">
+                <img src="../img/carrossel/ft2.png" class="slide">
+                <img src="../img/carrossel/ft3.png" class="slide">
+                <img src="../img/carrossel/ft4.png" class="slide">
+                <img src="../img/carrossel/ft5.png" class="slide">
+            </div>
+
+            <div class="heroTexto">
+                <h1>Bem-vindo á Pousada Condado Louvadeus</h1>
+                <p>Seu destino perfeito para descanso e tranquilidade</p>
+                <a href="acomodacoes.html" class="btnReservar"> Reservar </a>
+            </div>
+       </section>
+
+       <section class="comodidades">  <!--vantagens-->
+            <h2>Por que escolher a Pousada Condado Louvades?</h2>
+            <p>Comodidades pensadas para você</p>
+
+            <div class="gridComodidades">
+                <div class="cards">
+                    <img src="../img/pngs/wifi.png" alt="">
+                    <p>Wi-Fi grátis</p>
+                </div>
+                <div class="cards">
+                    <img src="../img/pngs/carro.png" alt="">
+                    <p>Estacionamento</p>
+                </div>
+                <div class="cards">
+                    <img src="../img/pngs/pao.png" alt="">
+                    <p>Café da manhã a parte</p>
+                </div>
+                <div class="cards">
+                    <img src="../img/pngs/arvore.png" alt="">
+                    <p>Área ampla em meio a natureza</p>
+                </div>
+                <div class="cards">
+                    <img src="../img/pngs/restaurante.png" alt="">
+                    <p>Prioridade para o restaurante</p>
+                </div>
+                <div class="cards">
+                    <img src="../img/pngs/frigideira.png" alt="">
+                    <p>Cozinha inclusa em todos os cháles</p>
+                </div>
+            </div>
+       </section>
+
+       <section>  <!--conforto-->
+            <div>
+
+            </div>
+       </section>
+
+       <section> <!--restaurante-->
+            <div>
+                
+            </div>
+       </section>
+
+       <section> <!--faz a reserva ai vai-->
+            <div>
+
+            </div>
+       </section>
+
+    </main>
+
+    <footer>        
+        <div class="footerColunas">
+            <a href="index.html" class="logo">Pousada Condado Louvadeus</a>
+
+            <div>
+                <h4>LINKS</h4>
+                <div class="footerLinks">
+                    <ul>
+                        <li> <a href="index.html">Inicio</a> </li>
+                        <li> <a href="acomodacoes.html">Acomodações</a> </li>
+                        <li> <a href="comoChegar.html">Como chegar</a> </li>
+                    </ul>
+                    <ul>
+                        <li> <a href="contato.html">Contato</a> </li>
+                        <li> <a href="login.html">Fazer login</a> </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <h4>CONTATOS</h4>
+                <div class="footerLinks">
+                    <ul>
+                        <li> <a href="https://www.instagram.com/restaurantecondadolouvadeus">Instagram</a> </li>
+                        <li> Telefone - (24) 99221-5656 </li>
+                    </ul>
+                    <ul>
+                        <li> <a href="contato.html">Email</a> </li>
+                        <li> <a href="comoChegar.html">Endereço</a> </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <hr>
+        <p> ©2026 - Condado Louvadeus. Todos os direitos reservados. </p>
+    </footer>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let atual =0;
+
+        setInterval(() => {
+            slides[atual].classList.remove('ativo');
+            atual = (atual +1) %slides.length;
+            slides[atual].classList.add('ativo');
+        }, 5000); //troca a cada 5s
+    </script>
+</body>
+</html>
