@@ -43,6 +43,7 @@
         font-family: 'Playfair Display', serif;
     }
 
+
     main{
         padding: 0;
         width: 100%;
@@ -149,6 +150,66 @@
         font-size: 15px;
         font-weight: 600;
     }
+    .info{
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        padding: 40px 50px 50px;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .infoTexto {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .infoTexto h3 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #3a5a28;
+        font-family: 'Playfair Display', serif;
+    }
+    .infoTexto p {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #333;
+    }
+    .infoFoto {
+        flex: 1;
+    }
+    .infoFoto img {
+        width: 100%;
+        height: 300px;
+        border-radius: 50px;
+        object-fit: cover;
+        object-position: center;
+    }
+    .restauranteFoto{
+        flex: 1;
+    }
+    .restauranteFoto img{
+        width: 100%;
+        height: 400px;
+        border-radius: 50px;
+        object-fit: cover;
+        object-position: center;
+    }
+    .btnInfo {
+        background-color: #3a5a28;
+        color: white;
+        padding: 12px 28px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        align-self: flex-start;
+    }
+    .btnInfo:hover {
+        background-color: #4a7a34;
+        transform: scale(1.05);
+    }
+
+
 
     footer{
         background-color: #d9d6cf;
@@ -257,21 +318,36 @@
             </div>
        </section>
 
-       <section>  <!--conforto-->
-            <div>
-
+       <section class="info">  <!--conforto-->
+            <div class="infoTexto">
+                <h3>Conforto e Aconchego</h3>
+                <p>Nossos quartos foram cuidadosamente decorados para proporcionar uma estadia inesquecível e relaxante. Cada detalhe foi pensado para garantir seu máximo conforto e bem-estar.</p>
+                <p>Uma imersão completa na natureza. Decoração rústica com elementos de madeira e vista privilegiada para o lago dos cisnes.</p>
+            </div>
+            <div class="infoFoto">
+                <img src="../img/conforto.avif" alt="Pousada">  
             </div>
        </section>
 
-       <section> <!--restaurante-->
-            <div>
-                
+       <section class="info"> <!--restaurante-->
+            <div class="restauranteFoto">
+                <img src="../img/condado louvadeus 2.jpg" alt="">                
+            </div>
+            <div class="infoTexto">
+                <h3>Restaurante Condado Louvadeus</h3>
+                <p>Desfrute de uma experiência gastronômica única em nosso restaurante. Pratos elaborados com ingredientes frescos e locais, preparados por chefs experientes.</p>
+                <a href="https://condadolouvadeus.com/" target="_blank" class="btnInfo">Conheça o restaurante!</a>
             </div>
        </section>
 
-       <section> <!--faz a reserva ai vai-->
-            <div>
-
+       <section class="info"> <!--faz a reserva ai vai-->
+            <div class="infoTexto">
+                <h3>Pronto para sua próxima aventura?</h3>
+                <p>Reserve agora e garanta as melhores tarifas para sua estadia!</p>
+                <a href="acomodacoes.html" class="btnInfo">Faça sua reserva agora</a>
+            </div>
+            <div class="infoFoto">
+                <img src="../img/quarto.avif" alt="Quarto">
             </div>
        </section>
 
@@ -300,7 +376,7 @@
                 <h4>CONTATOS</h4>
                 <div class="footerLinks">
                     <ul>
-                        <li> <a href="https://www.instagram.com/restaurantecondadolouvadeus">Instagram</a> </li>
+                        <li> <a href="https://www.instagram.com/restaurantecondadolouvadeus" target="_blank">Instagram</a> </li>
                         <li> Telefone - (24) 99221-5656 </li>
                     </ul>
                     <ul>
