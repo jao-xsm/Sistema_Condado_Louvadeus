@@ -181,7 +181,7 @@
                 <li> <a href="acomodacoes.html">Acomodações</a> </li>
                 <li> <a href="comoChegar.html">Como chegar</a> </li>
                 <li> <a href="contato.html">Contato</a> </li>
-                <li> <a href="login.html">Fazer login</a> </li>
+                <li> <a href="login.html" id="linkLogin">Fazer login</a> </li>
             </ul>
         </div>
     </nav>
@@ -228,7 +228,7 @@
                     </ul>
                     <ul>
                         <li> <a href="contato.html">Contato</a> </li>
-                        <li> <a href="login.html">Fazer login</a> </li>
+                        <li> <a href="login.html" id="linkLoginFooter">Fazer login</a> </li>
                     </ul>
                 </div>
             </div>
@@ -251,6 +251,20 @@
         <hr>
         <p> ©2026 - Condado Louvadeus. Todos os direitos reservados. </p>
     </footer>
+
+    <script>
+        const token = localStorage.getItem('token');  //ve se tem token salvo
+        const linkLogin = document.getElementById('linkLogin');
+        const linkLoginFooter = document.getElementById('linkLoginFooter');
+
+        if(token){
+            linkLogin.textContent = 'Perfil';
+            linkLogin.href = 'perfil.html'
+
+            linkLoginFooter.textContent = 'Perfil';
+            linkLoginFooter.href = 'perfil.html';
+        }
+    </script>
 
 </body>
 </html>
