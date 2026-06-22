@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from src.database import get_db
@@ -26,7 +27,7 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
     dados_token = {
         "sub": str(usuario.id),
         "email": usuario.email,
-        "tipo": usuario.tipo
+        "tipo_usuario": usuario.tipo
     }
     token = criar_token_acesso(dados_usuario=dados_token)
 
@@ -34,4 +35,24 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
         "access_token": token,
         "token_type": "bearer",
         "tipo_usuario": usuario.tipo
+    }
+
+@router.post("/login-swagger", include_in_schema=False)
+def login_swagger(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+
+    usuario = db.query(Usuario).filter(Usuario.email == form_data.username).first()
+
+    if not usuario or not verificar_senha(form_data.password, usuario.senha):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Email ou senha incorretos.")
+    
+    dados_token = {
+        "sub": str(usuario.id),
+        "email": usuario.email,
+        "tipo_usuario": usuario.tipo
+    }
+    token = criar_token_acesso(dados_usuario=dados_token)
+
+    return {
+        "access_token": token,
+        "token_type": "bearer"
     }
