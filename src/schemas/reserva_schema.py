@@ -19,6 +19,10 @@ class ReservaCreate(BaseModel):
         
         return self
     
+class ReservaUpdate(BaseModel):
+    data_checkin: date
+    data_checkout: date
+        
 class ReservaResponse(BaseModel):
     id: int
     hospede_id: int
