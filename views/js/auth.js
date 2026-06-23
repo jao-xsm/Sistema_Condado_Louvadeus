@@ -78,3 +78,63 @@ async function cadastrar() {
         alert (dados.detail);
     }
 }
+
+async function carregarPerfil() {
+    const token = localStorage.getItem('token');
+    
+    const resposta = await fetch(`${API}/usuarios/me`, {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    const dados = await resposta.json();
+
+    if (resposta.ok){
+        document.getElementById('nome').value = dados.nome;
+        document.getElementById('email').value = dados.email;
+        document.getElementById('telefone').value = dados.telefone || '';
+        document.getElementById('dataNt').value = dados.dataNascimento;
+    } else {
+        alert('Erro ao carregar perfil. Faça login novamente.');
+        window.location.href = 'login.html';
+    }
+
+    const fotoAtual = document.getElementById('fotoAtual');
+    if(dados.foto){
+        fotoAtual.src = dados.foto;
+    }
+
+}
+
+async function carregarReservas() {
+    const token = localStorage.getItem('token');
+    const resposta = await fetch(`${API}/reservas/`, {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    const reservas = await resposta.json();
+    const lista = document.getElementById('listaReservas');
+    if (!resposta.ok || reservas.length === 0) {
+        lista.innerHTML = '<p>Nenhuma reserva encontrada.</p>';
+        return;
+    }
+
+    lista.innerHTML = '';
+    reservas.forEach(r => {
+        lista.innerHTML += `
+            <div class="cardReserva">
+                <p><strong>Chalé:</strong> ${r.chale_id}</p>
+                <p><strong>Check-in:</strong> ${r.data_checkin}</p>
+                <p><strong>Check-out:</strong> ${r.data_checkout}</p>
+                <p><strong>Status:</strong> ${r.status}</p>
+            </div>
+        `;
+    });
+}
+
+function logout(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('tipo_usuario'); // limpa p sair
+    window.location.href = 'index.html';
+}
