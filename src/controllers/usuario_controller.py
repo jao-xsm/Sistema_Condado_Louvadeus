@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 import bcrypt
 
 from src.models.usuario import Usuario
-from src.schemas.usuario_schema import CadastroHospedeSchema
+from src.schemas.usuario_schema import CadastroHospedeSchema, UsuarioUpdate
+from src.core.security import verificar_senha
 
 def cadastrar_novo_hospede(dados: CadastroHospedeSchema, db: Session):      #RF01
 
@@ -48,3 +49,33 @@ def cadastrar_novo_hospede(dados: CadastroHospedeSchema, db: Session):      #RF0
         "usuario_id": novo_hospede.id,
         "nome": novo_hospede.nome
     }
+
+def atualizar_usuario(db: Session, usuario_id: int, dados_atualizacao: UsuarioUpdate):
+    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+
+    if not usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Utilizador não encontrado."
+        )
+    
+    if dados_atualizacao.nome is not None:
+        usuario.nome = dados_atualizacao.nome
+
+    if dados_atualizacao.telefone is not None:
+        usuario.telefone = dados_atualizacao.telefone
+
+    if dados_atualizacao.senha is not None:
+        senha_bytes = dados_atualizacao.senha.encode('utf-8')
+        sal = bcrypt.gensalt()
+        senha_hash = bcrypt.hashpw(senha_bytes, sal).decode('utf-8')
+
+        usuario.senha = senha_hash
+
+    if dados_atualizacao.foto_url is not None:
+        usuario.foto = dados_atualizacao.foto_url
+
+    db.commit()
+    db.refresh(usuario)
+
+    return usuario

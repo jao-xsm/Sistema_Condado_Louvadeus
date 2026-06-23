@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from datetime import date
+from typing import Optional
 
 class CadastroHospedeSchema(BaseModel):
     nome: str = Field(..., min_length=3, max_length=150)
@@ -25,6 +26,23 @@ class CadastroHospedeSchema(BaseModel):
         
         return valor_data
     
+class UsuarioResponse(BaseModel):
+    id: int
+    nome: str
+    email: EmailStr
+    telefone: Optional[str] = None
+    foto: Optional[str] = None
+    data_nascimento: Optional[date] = None
+    tipo: str = Field(..., serialization_alias="tipo_usuario")
+
+    model_config = {"from_attributes": True}
+    
+class UsuarioUpdate(BaseModel):
+    nome: Optional[str] = None
+    telefone: Optional[str] = None
+    senha: Optional[str] = None
+    foto_url: Optional[str] = None
+
 class LoginRequest(BaseModel):
     email: EmailStr
     senha: str

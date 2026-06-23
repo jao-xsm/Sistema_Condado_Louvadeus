@@ -3,10 +3,10 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from src.database import get_db
-from src.schemas.usuario_schema import CadastroHospedeSchema, TokenResponse, LoginRequest
+from src.schemas.usuario_schema import CadastroHospedeSchema, TokenResponse, LoginRequest, UsuarioUpdate, UsuarioResponse
 from src.controllers import usuario_controller
 from src.models.usuario import Usuario
-from src.core.security import verificar_senha, criar_token_acesso
+from src.core.security import verificar_senha, criar_token_acesso, obter_usuario_atual
 
 router = APIRouter(prefix="/usuarios", tags=["Usuários"])
 
@@ -36,6 +36,20 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
         "token_type": "bearer",
         "tipo_usuario": usuario.tipo
     }
+
+@router.patch("/perfil", response_model=UsuarioResponse)
+def editar_perfil(
+    dados: UsuarioUpdate,
+    db: Session = Depends(get_db),
+    dados_token: dict = Depends(obter_usuario_atual)
+):
+    usuario_id = int(dados_token["sub"])
+
+    return usuario_controller.atualizar_usuario(
+        db=db,
+        usuario_id=usuario_id,
+        dados_atualizacao=dados
+    )
 
 @router.post("/login-swagger", include_in_schema=False)
 def login_swagger(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
