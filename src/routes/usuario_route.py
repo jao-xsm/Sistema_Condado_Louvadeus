@@ -100,3 +100,11 @@ def obterPerfil(token: str = Depends(oauth2_scheme), db: Session = Depends(get_d
         "dataNascimento": str(usuario.data_nascimento),
         "tipo": usuario.tipo
     }
+
+@router.get("/me", response_model=UsuarioResponse, status_code=status.HTTP_200_OK)
+def obter_dados_usuario(db: Session = Depends(get_db), usuario_logado: dict = Depends(obter_usuario_atual)):
+    usuario_id = int(usuario_logado["sub"])
+
+    usuario_bd = usuario_controller.listar_dados(db=db, usuario_id=usuario_id)
+
+    return usuario_bd

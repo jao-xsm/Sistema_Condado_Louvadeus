@@ -50,6 +50,16 @@ def cadastrar_novo_hospede(dados: CadastroHospedeSchema, db: Session):      #RF0
         "nome": novo_hospede.nome
     }
 
+def listar_dados(db: Session, usuario_id: int):
+    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+
+    if not usuario:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Usuario não encontrado"
+        )
+    return usuario
+
 def atualizar_usuario(db: Session, usuario_id: int, dados_atualizacao: UsuarioUpdate):
     usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
 
