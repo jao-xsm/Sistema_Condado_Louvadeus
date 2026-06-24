@@ -93,16 +93,17 @@ async function carregarPerfil() {
         document.getElementById('nome').value = dados.nome;
         document.getElementById('email').value = dados.email;
         document.getElementById('telefone').value = dados.telefone || '';
-        document.getElementById('dataNt').value = dados.dataNascimento;
+        document.getElementById('dataNt').value = dados.data_nascimento;
+        const fotoAtual = document.getElementById('fotoAtual');
+        if(dados.foto){
+            fotoAtual.src = dados.foto;
+        }
     } else {
         alert('Erro ao carregar perfil. Faça login novamente.');
         window.location.href = 'login.html';
     }
 
-    const fotoAtual = document.getElementById('fotoAtual');
-    if(dados.foto){
-        fotoAtual.src = dados.foto;
-    }
+    
 
 }
 
@@ -131,6 +132,53 @@ async function carregarReservas() {
             </div>
         `;
     });
+}
+
+async function salvarPerfil() {
+    const token = localStorage.getItem('token');
+    const nome = document.getElementById('nome').value;
+    const telefone = document.getElementById('telefone').value;
+    const senha = document.getElementById('senha').value;
+    const fotoInput = document.getElementById('foto');
+
+    let fotoBase64 = null;
+    if(fotoInput.files.length > 0){
+        const arquivo = fotoInput.files[0];
+        fotoBase64 = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(arquivo);
+        })
+    }
+
+    const corpo = {};
+    if(nome) corpo.nome = nome;
+    if(telefone) corpo.telefone = telefone;
+    if(senha && senha.trim() != '') corpo.senha = senha;
+    if(fotoBase64) corpo.foto_url = fotoBase64;
+
+    if(Object.keys(corpo).length === 0){
+        alert('Nenhuma alteração feita!');
+        return;
+    }
+
+    const resposta = await fetch(`${API}/usuarios/perfil`, {
+        method: 'PATCH',
+        headers:{
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(corpo)
+    });
+
+    const dados = await resposta.json();
+
+    if (resposta.ok) {
+        alert('Perfil atualizado com sucesso!');
+        carregarPerfil();
+    } else {
+        alert(dados.detail || 'Erro ao atualizar perfil.');
+    }
 }
 
 function logout(){

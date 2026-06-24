@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Date
 from src.database import Base
 
+from sqlalchemy import Column, Integer, String, Date, Text
+
 class Usuario(Base):
     __tablename__ = "usuarios"
 
@@ -15,7 +17,7 @@ class Usuario(Base):
 
     telefone = Column(String(20), nullable=True)
 
-    foto = Column(String(255), nullable=True)
+    foto = Column(Text, nullable=True)
 
     data_nascimento = Column(Date, nullable=False)
 
