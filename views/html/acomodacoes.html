@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Acomodações – Condado Louvadeus</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet"/>
-  <script src="../js/auth.js"></script> <!-- linka o arquivo JS-->
+  <script src="../js/chales.js"></script> <!-- linka o arquivo JS-->
   <style>
     *{
         margin: 0;
@@ -124,6 +124,69 @@
         text-align: center;
         margin: 40px;
     }
+    .listaChales{
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        padding: 0 60px 60px;
+        max-width: 900px;     
+        margin: 0 auto; 
+    }
+    .cardChale{
+        background-color: #b2d9aa;
+        border-radius: 25px;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+    /* chales pares invertem a ordem (fotos na esquerda) */
+    .cardChale.invertido {
+        flex-direction: row-reverse;
+    }
+    .cardInfo{
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-width: 160px;
+        max-width: 180px;
+    }
+    .cardInfo h3{
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        color: #3a5a28;
+    }
+    .btnReservarChale{
+        background-color: #3a5a28;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 20px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        width: fit-content;
+    }
+    .btnReservarChale:hover {
+        background-color: #4a7a34;
+        transform: scale(1.05);
+    }
+    .cardAvaliacao{
+        font-size: 13px;
+        color: #333;
+    }
+    .gridFotos{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 8px;
+        flex: 1;
+    }
+    .gridFotos img{
+        width: 100%;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
 
     
     footer{
@@ -225,13 +288,8 @@
             <p>Conforto e magia em meio à natureza. Nossos quartos foram pensados para proporcionar uma estadia inesquecível e relaxante.</p>
        </div>
 
-       <div class="chale">
-            <div class="inf">
-                
-            </div>
-            <div class="fotos">
-
-            </div>
+       <div class="listaChales" id="listaChales">
+            <!-- chales q vao ser carregados pelo js -->
        </div>
 
     </main>
