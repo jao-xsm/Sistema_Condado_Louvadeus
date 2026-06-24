@@ -245,6 +245,26 @@
         border-top: 1px solid #b0aca5;
         margin: 32px 0 16px;
     }
+    @media (max-width: 770px) {
+        .footerColunas {
+            flex-direction: column;
+            gap: 32px;
+        }
+        .footerLinks {
+            flex-direction: column;
+            gap: 8px;
+        }
+        nav {
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px 24px;
+        }
+        .navLinks ul {
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+        }
+    }
   </style>
 </head>
 <body>
@@ -279,7 +299,7 @@
             </div>
 
             <div class="heroTexto">
-                <h1>Bem-vindo á Pousada Condado Louvadeus</h1>
+                <h1>Bem-vindo à Pousada Condado Louvadeus</h1>
                 <p>Seu destino perfeito para descanso e tranquilidade</p>
                 <a href="acomodacoes.html" class="btnReservar"> Reservar </a>
             </div>

@@ -162,6 +162,38 @@
         border-top: 1px solid #b0aca5;
         margin: 32px 0 16px;
     }
+    @media (max-width: 770px) {
+        form{
+            flex-direction: column;
+            padding: 24px;
+        }
+        .campo{
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .campo label{
+            min-width: unset;
+            text-align: left;
+        }
+        .footerColunas {
+            flex-direction: column;
+            gap: 32px;
+        }
+        .footerLinks {
+            flex-direction: column;
+            gap: 8px;
+        }
+        nav {
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px 24px;
+        }
+        .navLinks ul {
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+        }
+    }
   </style>
 </head>
 <body>
