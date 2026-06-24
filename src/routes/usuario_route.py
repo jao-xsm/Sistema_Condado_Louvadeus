@@ -78,29 +78,6 @@ def login_swagger(form_data: OAuth2PasswordRequestForm = Depends(), db: Session 
         "token_type": "bearer"
     }
 
-@router.get("/me")   #rota p buscar os dados
-def obterPerfil(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):  #pega o token autom do cabeç
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        usuario_id = int(payload.get("sub"))  #pega o id do usuario p descobrir qm é
-    except:
-        raise HTTPException(status_code=401, detail="Token inválido")
-    
-    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
-
-    if not usuario:
-        raise HTTPException(status_code=401, detail="Usuário não encontrado")
-    
-    return{
-        "id": usuario.id,
-        "nome": usuario.nome,
-        "email": usuario.email,
-        "telefone": usuario.telefone,
-        "foto": usuario.foto,
-        "dataNascimento": str(usuario.data_nascimento),
-        "tipo": usuario.tipo
-    }
-
 @router.get("/me", response_model=UsuarioResponse, status_code=status.HTTP_200_OK)
 def obter_dados_usuario(db: Session = Depends(get_db), usuario_logado: dict = Depends(obter_usuario_atual)):
     usuario_id = int(usuario_logado["sub"])
