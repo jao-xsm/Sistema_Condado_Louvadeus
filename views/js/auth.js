@@ -98,6 +98,15 @@ async function carregarPerfil() {
         if(dados.foto){
             fotoAtual.src = dados.foto;
         }
+        const nomeAdm = document.getElementById('nomeAdm');
+        if (nomeAdm) {
+            nomeAdm.value = dados.nome;
+            document.getElementById('emailAdm').value = dados.email;
+            document.getElementById('telefoneAdm').value = dados.telefone || '';
+            document.getElementById('dataNtAdm').value = dados.data_nascimento || '';
+            const fotoAdm = document.getElementById('fotoAtualAdm');
+            if (dados.foto) fotoAdm.src = dados.foto;
+        }
     } else {
         alert('Erro ao carregar perfil. Faça login novamente.');
         window.location.href = 'login.html';
@@ -136,10 +145,14 @@ async function carregarReservas() {
 
 async function salvarPerfil() {
     const token = localStorage.getItem('token');
-    const nome = document.getElementById('nome').value;
-    const telefone = document.getElementById('telefone').value;
-    const senha = document.getElementById('senha').value;
-    const fotoInput = document.getElementById('foto');
+    const tipo = localStorage.getItem('tipo_usuario');
+
+    const prefixo = tipo == 'anfitrião' ? 'Adm' : '';
+
+    const nome = document.getElementById(`nome${prefixo}`).value;
+    const telefone = document.getElementById(`telefone${prefixo}`).value;
+    const senha = document.getElementById(`senha${prefixo}`).value;
+    const fotoInput = document.getElementById(`foto${prefixo}`);
 
     let fotoBase64 = null;
     if(fotoInput.files.length > 0){
