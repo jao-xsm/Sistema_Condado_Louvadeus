@@ -214,6 +214,118 @@
         font-size: 15px;
         color: #1a1a1a;
     }
+    .botoesReserva {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+    }
+    .btnEditarReserva {
+        background-color: #3a5a28;
+        color: white;
+        font-size: 13px;
+        padding: 8px 20px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+    }
+    .btnEditarReserva:hover{
+        background-color: #4a7a34;
+    }
+    .btnCancelarReserva{
+        background-color: #b31717;
+        color: white;
+        font-size: 13px;
+        padding: 8px 20px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+    }
+    .btnCancelarReserva:hover {
+        background-color: #d21f1f;
+    }
+    .hidden {
+        display: none !important;
+    }
+    #overlayEdicao {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .modalConteudo {
+        background-color: #f0ede6;
+        border-radius: 24px;
+        padding: 40px 48px;
+        width: 100%;
+        max-width: 460px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        position: relative;
+    }
+    .modalFechar {
+        position: absolute;
+        top: 16px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+        color: #555;
+        padding: 0;
+    }
+    .modalConteudo h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        color: #3a5a28;
+    }
+    .modalCampo {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .modalCampo label {
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .modalCampo input {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 15px;
+        background-color: #ffffff;
+        outline: none;
+    }
+    .modalBotoes {
+        display: flex;
+        gap: 16px;
+        justify-content: flex-end;
+    }
+    .btnCancelarModal {
+        background-color: transparent;
+        color: #555;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 12px 24px;
+        border: 2px solid #ccc;
+        border-radius: 30px;
+        cursor: pointer;
+    }
+    .btnConfirmarEdicao {
+        background-color: #3a5a28;
+        color: white;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 12px 32px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+    }
+    .btnConfirmarEdicao:hover{
+        background-color: #4a7a34; }
     
 
     footer{
@@ -376,6 +488,28 @@
             
         </div>
         
+        <div id="overlayEdicao" class="hidden">
+        <div class="modalConteudo">
+            <button class="modalFechar" onclick="fecharModalEdicao()">✕</button>
+            <h3>Editar reserva</h3>
+
+            <input type="hidden" id="modalReservaId">
+
+            <div class="modalCampo">
+                <label for="modalCheckin">Check-in:</label>
+                <input type="date" id="modalCheckin">
+            </div>
+            <div class="modalCampo">
+                <label for="modalCheckout">Check-out:</label>
+                <input type="date" id="modalCheckout">
+            </div>
+
+            <div class="modalBotoes">
+                <button class="btnCancelarModal" onclick="fecharModalEdicao()">Cancelar</button>
+                <button class="btnConfirmarEdicao" onclick="confirmarEdicaoReserva()">Salvar</button>
+            </div>
+        </div>
+    </div>
     </main>
 
     <footer>         

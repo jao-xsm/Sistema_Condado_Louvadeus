@@ -132,15 +132,90 @@ async function carregarReservas() {
 
     lista.innerHTML = '';
     reservas.forEach(r => {
+        const podeCancelar = r.status !== 'CANCELADA' && r.status !== 'FINALIZADA';
         lista.innerHTML += `
             <div class="cardReserva">
                 <p><strong>Chalé:</strong> ${r.chale_id}</p>
                 <p><strong>Check-in:</strong> ${r.data_checkin}</p>
                 <p><strong>Check-out:</strong> ${r.data_checkout}</p>
                 <p><strong>Status:</strong> ${r.status}</p>
+                <p><strong>Total:</strong> R$ ${r.valor_total}</p>
+                <div class="botoesReserva">
+                    ${podeCancelar ? `
+                        <button class="btnEditarReserva" onclick="abrirEdicaoReserva(${r.id}, '${r.data_checkin}', '${r.data_checkout}')">Editar datas</button>
+                        <button class="btnCancelarReserva" onclick="cancelarReserva(${r.id})">Cancelar reserva</button>
+                    ` : ''}
+                </div>
             </div>
         `;
     });
+}
+
+async function cancelarReserva(reservaId) {
+    if (!confirm('Tem certeza que deseja cancelar esta reserva?')) return;
+
+    const token = localStorage.getItem('token');
+    const resposta = await fetch(`${API}/reservas/${reservaId}/cancelar`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    const dados = await resposta.json();
+    if (resposta.ok) {
+        alert('Reserva cancelada com sucesso!');
+        carregarReservas(); // att a lista
+    } else {
+        alert(dados.detail || 'Erro ao cancelar reserva.');
+    }
+}
+
+function abrirEdicaoReserva(reservaId, checkinAtual, checkoutAtual) {
+    document.getElementById('modalReservaId').value = reservaId;
+    document.getElementById('modalCheckin').value = checkinAtual;
+    document.getElementById('modalCheckout').value = checkoutAtual;
+    document.getElementById('overlayEdicao').classList.remove('hidden');
+}
+async function confirmarEdicaoReserva() {
+    const reservaId = document.getElementById('modalReservaId').value;
+    const checkin = document.getElementById('modalCheckin').value;
+    const checkout = document.getElementById('modalCheckout').value;
+
+    if (!checkin || !checkout) {
+        alert('Preencha as duas datas!');
+        return;
+    }
+    if (checkout <= checkin) {
+        alert('Check-out deve ser depois do check-in!');
+        return;
+    }
+    await editarReserva(reservaId, checkin, checkout);
+    fecharModalEdicao();
+}
+function fecharModalEdicao() {
+    document.getElementById('overlayEdicao').classList.add('hidden');
+}
+
+async function editarReserva(reservaId, checkin, checkout) {
+    const token = localStorage.getItem('token');
+    const resposta = await fetch(`${API}/reservas/${reservaId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            data_checkin: checkin,
+            data_checkout: checkout
+        })
+    });
+
+    const dados = await resposta.json();
+    if (resposta.ok) {
+        alert('Reserva atualizada com sucesso!');
+        carregarReservas();
+    } else {
+        alert(dados.detail || 'Erro ao editar reserva.');
+    }
 }
 
 async function salvarPerfil() {
