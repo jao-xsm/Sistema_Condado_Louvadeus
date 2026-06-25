@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from src.database import Base
 
@@ -13,7 +13,7 @@ class Chale(Base):
     descricao = Column(String, nullable=False)
     val_diaria = Column(Float, nullable=False)
     quant_camas = Column(Integer, nullable=False)
-    foto_capa = Column(String, nullable=False)
+    foto_capa = Column(Text, nullable=False)
 
     ativo = Column(Boolean, nullable=False)#nao iremos deletar do banco, apenas desativar e não mostrar no site
 

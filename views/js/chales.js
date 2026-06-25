@@ -1,5 +1,7 @@
 const API = 'http://localhost:8000';
 
+const tipoUsuario = localStorage.getItem('tipo_usuario');
+
 async function carregarChales() {
     const resposta = await fetch(`${API}/chales/`);
     const chales = await resposta.json();
@@ -22,7 +24,6 @@ async function carregarChales() {
             .map(url => `<img src="${url}" alt="foto do chalé">`)
             .join('');
 
-        const tipoUsuario = localStorage.getItem('tipo_usuario');
         const botao = tipoUsuario === 'anfitriao'
             ? `<button class="btnReservarChale" onclick="window.location.href='chaleAdm.html?id=${chale.id}'">Editar</button>`
             : `<button class="btnReservarChale" onclick="window.location.href='chale.html?id=${chale.id}'">Reservar agora</button>`;
@@ -40,5 +41,17 @@ async function carregarChales() {
 
         container.appendChild(card);
     }); //criando um novo chal
+
+    if(tipoUsuario === 'anfitriao'){
+        const btnAdd = document.createElement('div');
+        btnAdd.style.textAlign = 'center';
+        btnAdd.innerHTML = `
+            <button class="btnReservarChale" onclick="window.location.href = 'chaleAdm.html'">
+                Adicionar novo Chalé
+            </button>
+        `;
+        container.appendChild(btnAdd);
+    }
+
 }
 carregarChales();
