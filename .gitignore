@@ -219,3 +219,5 @@ __marimo__/
 
 #dotenv 
 .env
+
+temp.py

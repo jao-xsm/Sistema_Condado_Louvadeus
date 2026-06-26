@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.routes.usuario_route import router as usuario_router
 from src.routes.chale_route import router as chale_router
 from src.routes.reserva_route import router as reserva_router
+from src.routes.avaliacao_route import router as avaliacao_router
 
 app = FastAPI(
     title="API - Condado Louvadeus",
@@ -21,6 +22,7 @@ app.add_middleware( # configura o servidor para aceitar requisições do fronten
 app.include_router(usuario_router)
 app.include_router(chale_router)
 app.include_router(reserva_router)
+app.include_router(avaliacao_router)
 
 #para testar se esta no ar
 @app.get("/", tags=["Status"])
