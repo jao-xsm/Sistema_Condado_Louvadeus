@@ -26,6 +26,14 @@ class ChaleCreate(ChaleBase):
 
     pass
 
+class ChaleUpdate(BaseModel):
+    nome: Optional[str] = None
+    descricao: Optional[str] = None
+    val_diaria: Optional[float] = None
+    quant_camas: Optional[int] = None
+    foto_url: Optional[str] = None
+    fotos: Optional[List[str]]
+    ativo: Optional[bool] = None
 
 class ChaleResponse(ChaleBase):
     id: int
