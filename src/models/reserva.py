@@ -14,7 +14,7 @@ class Reserva(Base):
 
     valor_total = Column(Float, nullable=False)
 
-    status = Column(String, default="PENDENTE", nullable=False)
+    status = Column(String, default="Aguardando data do Check-in", nullable=False)
 
     hospede = relationship("Usuario")
     chale = relationship("Chale")

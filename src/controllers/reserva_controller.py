@@ -37,7 +37,7 @@ def criar_reserva(db: Session, reserva_data: ReservaCreate, hospede_id: int):
         data_checkin=reserva_data.data_checkin,
         data_checkout=reserva_data.data_checkout,
         valor_total=valor_calculado,
-        status="PENDENTE"
+        status="Aguardando data do Check-in"
     )
 
     db.add(nova_reserva)
@@ -97,6 +97,8 @@ def editar_reserva(db: Session, reserva_id: int, reserva_data: ReservaUpdate, us
 
     db.commit()
     db.refresh(reserva)
+
+    reserva = atualizar_ciclo_de_vida_reserva(db, reserva)
     return reserva
 
 def cancelar_reserva(db: Session, reserva_id: int, usuario_id: int):
@@ -127,8 +129,41 @@ def cancelar_reserva(db: Session, reserva_id: int, usuario_id: int):
 
     return {"mensagem": "Reserva cancelada com sucesso", "reserva": reserva}
 
+def atualizar_ciclo_de_vida_reserva(db: Session, reserva: Reserva):
+    hoje = date.today()
+    status_antigo = reserva.status
+    
+    # Se a reserva já foi cancelada, não tem o que fazer né
+    if status_antigo == "CANCELADA":
+        return reserva
+
+    # regras do ciclo de vida da reserva 
+    if hoje >= reserva.data_checkout:
+        reserva.status = "Concluída"
+    elif hoje >= reserva.data_checkin:
+        reserva.status = "Em andamento"
+    else:
+        reserva.status = "Aguardando check-in"
+
+    # se o status mudou após a verificação de data, salva no Postgres 
+    if status_antigo != reserva.status:
+        db.commit()
+        db.refresh(reserva)
+        
+    return reserva
+
 def listar_reservas(db: Session, hospede_id: int):
-    return db.query(Reserva).filter(Reserva.hospede_id == hospede_id).all()
+    reservas = db.query(Reserva).filter(Reserva.hospede_id == hospede_id).all()
+    # Atualiza o status de cada uma delas na lista
+    for reserva in reservas:
+        atualizar_ciclo_de_vida_reserva(db, reserva)
+    return reservas
+
+def obter_reserva_por_id(db: Session, reserva_id: int):
+    reserva = db.query(Reserva).filter(Reserva.id == reserva_id).first()
+    if reserva:
+        reserva = atualizar_ciclo_de_vida_reserva(db, reserva)
+    return reserva
 
 def listar_reservas_calendario(db: Session):
     return db.query(Reserva).filter(Reserva.status != "CANCELADA").all()
