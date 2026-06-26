@@ -34,3 +34,19 @@ class ReservaResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class ReservaCalendario(BaseModel):
+    id: int
+    chale__id: int
+    data_checkin: date
+    data_checkout: date
+
+    class Config:
+        from_attributes = True
+
+class DisponibilidadeChale(BaseModel):
+    data_checkin: date
+    data_checkout: date
+
+    class Config:
+        from_attributes = True

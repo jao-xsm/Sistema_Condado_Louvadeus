@@ -129,3 +129,13 @@ def cancelar_reserva(db: Session, reserva_id: int, usuario_id: int):
 
 def listar_reservas(db: Session, hospede_id: int):
     return db.query(Reserva).filter(Reserva.hospede_id == hospede_id).all()
+
+def listar_reservas_calendario(db: Session):
+    return db.query(Reserva).filter(Reserva.status != "CANCELADA").all()
+
+def listar_disponibilidade_chale(db: Session, chale_id: int):
+    return db.query(Reserva).filter(
+        Reserva.chale_id == chale_id,
+        Reserva.status != "CANCELADA"
+    ).all()
+    
