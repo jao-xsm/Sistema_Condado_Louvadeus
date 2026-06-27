@@ -69,15 +69,13 @@ function mudarMes(direcao) {
     renderizarCalendario();
 }
 
-// xperando ......
-// async function carregarReservas() {
-//     const token = localStorage.getItem('token');
-//     const resposta = await fetch(`${API}/reservas/todas`, {
-//         headers: { 'Authorization': `Bearer ${token}` }
-//     });
-//     reservas = await resposta.json();
-//     renderizarCalendario();
-// }
-// carregarReservas();
+async function carregarReservas() {
+    const token = localStorage.getItem('token');
+    const resposta = await fetch(`${API}/reservas/todas`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    reservas = await resposta.json();
+    renderizarCalendario();
+}
 
-renderizarCalendario();
+carregarReservas();

@@ -48,7 +48,7 @@ class ReservaResponse(BaseModel):
 
 class ReservaCalendario(BaseModel):
     id: int
-    chale__id: int
+    chale_id: int
     data_checkin: date
     data_checkout: date
 

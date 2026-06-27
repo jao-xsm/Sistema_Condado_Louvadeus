@@ -32,7 +32,7 @@ class ChaleUpdate(BaseModel):
     val_diaria: Optional[float] = None
     quant_camas: Optional[int] = None
     foto_url: Optional[str] = None
-    fotos: Optional[List[str]]
+    fotos: Optional[List[str]] = None
     ativo: Optional[bool] = None
 
 class ChaleResponse(ChaleBase):
