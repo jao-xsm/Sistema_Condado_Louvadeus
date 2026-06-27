@@ -152,6 +152,9 @@ def deletar_foto_chale(db, chale_id: int, foto_id: int, anfitriao_id: int):
 def listar_chales(db: Session):
     return db.query(Chale).options(joinedload(Chale.fotos)).filter(Chale.ativo==True).all()
 
+def listar_todos_chales(db: Session):
+    return db.query(Chale).options(joinedload(Chale.fotos)).all()
+
 def obter_chale_por_id(db: Session, chale_id: int):
     chale = db.query(Chale).options(joinedload(Chale.fotos)).filter(Chale.id == chale_id).first()
 

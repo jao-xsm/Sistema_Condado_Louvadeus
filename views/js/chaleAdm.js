@@ -61,9 +61,35 @@ async function carregarChaleAdm() {
         </section>
 
         <section class="secaoPerigo">
+            <button class="btnDisponibilidade ${chale.ativo ? 'btnDesativar' : 'btnAtivar'}" 
+                onclick="alterarDisponibilidade(${chale.id}, ${chale.ativo})">
+                ${chale.ativo ? 'Desativar Chalé' : 'Ativar Chalé'}
+            </button>
             <button class="btnExcluir" onclick="excluirChale(${chale.id})">Excluir Chalé</button>
         </section>
     `;
+}
+
+async function alterarDisponibilidade(chaleId, ativoAtual) {
+    const token = localStorage.getItem('token');
+    const novoStatus = !ativoAtual;
+
+    const resposta = await fetch(`${API}/chales/${chaleId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ ativo: novoStatus })
+    });
+
+    if (resposta.ok) {
+        alert(novoStatus ? 'Chalé ativado!' : 'Chalé desativado!');
+        carregarChaleAdm();
+    } else {
+        const dados = await resposta.json();
+        alert(dados.detail || 'Erro ao alterar disponibilidade.');
+    }
 }
 
 async function removerFoto(chaleId, fotoId) {
