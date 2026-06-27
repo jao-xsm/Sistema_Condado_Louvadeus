@@ -1,5 +1,13 @@
 const API = 'http://localhost:8000';
 
+let mesCalendario = new Date().getMonth();
+let anoCalendario = new Date().getFullYear();
+let datasOcupadas = [];
+
+const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const diasSemana = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
 async function carregarChale() {
     const parametros = new URLSearchParams(window.location.search);
     const id = parametros.get('id');
@@ -33,6 +41,20 @@ async function carregarChale() {
             <p>${chale.descricao}</p>
         </section>
 
+        <section class="secaoCalendario">
+            <h3>Disponibilidade</h3>
+            <div class="calendarioNav">
+                <button onclick="mudarMesChale(-1)">← Anterior</button>
+                <span id="mesAnoChale"></span>
+                <button onclick="mudarMesChale(1)">Próximo →</button>
+            </div>
+            <div class="legendaCalendario">
+                <span class="legenda livre">Disponível</span>
+                <span class="legenda ocupado">Ocupado</span>
+            </div>
+            <div class="calendarioGrid" id="calendarioChale"></div>
+        </section>
+
         <section class="secaoReserva">
             <div class="campoReserva">
                 <label for="checkin">Check-in:</label>
@@ -50,6 +72,63 @@ async function carregarChale() {
             </button>
         </section>
     `;
+    carregarDisponibilidade(chale.id);
+}
+
+async function carregarDisponibilidade(chaleId) {
+    const resposta = await fetch(`${API}/reservas/chale/${chaleId}/disponibilidade`);
+    const reservas = await resposta.json();
+    
+    datasOcupadas = [];
+    reservas.forEach(r => {
+        let atual = new Date(r.data_checkin + 'T00:00:00');
+        const fim = new Date(r.data_checkout + 'T00:00:00');
+        while (atual < fim) {
+            datasOcupadas.push(atual.toISOString().split('T')[0]);
+            atual.setDate(atual.getDate() + 1);
+        }
+    });
+    renderizarCalendarioChale();
+}
+function renderizarCalendarioChale() {
+    const grid = document.getElementById('calendarioChale');
+    const titulo = document.getElementById('mesAnoChale');
+
+    titulo.textContent = `${meses[mesCalendario]} ${anoCalendario}`;
+    grid.innerHTML = '';
+
+    diasSemana.forEach(dia => {
+        const cell = document.createElement('div');
+        cell.className = 'diaSemana';
+        cell.textContent = dia;
+        grid.appendChild(cell);
+    });
+
+    const primeiroDia = new Date(anoCalendario, mesCalendario, 1).getDay();
+    const totalDias = new Date(anoCalendario, mesCalendario + 1, 0).getDate();
+    const hoje = new Date().toISOString().split('T')[0];
+
+    for (let i = 0; i < primeiroDia; i++) {
+        const vazio = document.createElement('div');
+        vazio.className = 'diaChale vazio';
+        grid.appendChild(vazio);
+    }
+    for (let d = 1; d <= totalDias; d++) {
+        const cell = document.createElement('div');
+        const dataStr = `${anoCalendario}-${String(mesCalendario + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const ocupado = datasOcupadas.includes(dataStr);
+        const passado = dataStr < hoje;
+
+        cell.className = `diaChale ${ocupado ? 'ocupado' : passado ? 'passado' : 'livre'}`;
+        cell.innerHTML = `<div class="diaNumero">${d}</div>`;
+        grid.appendChild(cell);
+    }
+}
+function mudarMesChale(direcao) {
+    mesCalendario += direcao;
+    if (mesCalendario > 11) { mesCalendario = 0; anoCalendario++; }
+    if (mesCalendario < 0) { mesCalendario = 11; anoCalendario--; }
+    renderizarCalendarioChale();
 }
 
 async function confirmarReserva(chaleId, valorDiaria) {

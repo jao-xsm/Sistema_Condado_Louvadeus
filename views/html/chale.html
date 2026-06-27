@@ -62,51 +62,121 @@
         border-radius: 10px;
     }
     .secaoDescricao {
-    background-color: #e0ddd6;
-    border-radius: 20px;
-    padding: 30px;
-    margin-bottom: 30px;
-}
-.secaoDescricao h3 {
-    font-family: 'Playfair Display', serif;
-    color: #3a5a28;
-    margin-bottom: 12px;
-}
-.secaoReserva {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-width: 400px;
-    margin: 0 auto;
-    text-align: center;
-}
-.campoReserva {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-}
-.campoReserva input {
-    border: none;
-    border-radius: 12px;
-    padding: 10px 16px;
-    background-color: #e0ddd6;
-    font-size: 14px;
-    flex: 1;
-}
-.btnConfirmar {
-    background-color: #3a5a28;
-    color: white;
-    padding: 14px;
-    border: none;
-    border-radius: 25px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-}
-.btnConfirmar:hover {
-    background-color: #4a7a34;
-}
+        background-color: #e0ddd6;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    .secaoDescricao h3 {
+        font-family: 'Playfair Display', serif;
+        color: #3a5a28;
+        margin-bottom: 12px;
+    }
+    .secaoReserva {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        max-width: 400px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .campoReserva {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+    }
+    .campoReserva input {
+        border: none;
+        border-radius: 12px;
+        padding: 10px 16px;
+        background-color: #e0ddd6;
+        font-size: 14px;
+        flex: 1;
+    }
+    .btnConfirmar {
+        background-color: #3a5a28;
+        color: white;
+        padding: 14px;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .btnConfirmar:hover {
+        background-color: #4a7a34;
+    }
+    .secaoCalendario {
+        margin-bottom: 30px;
+    }
+    .secaoCalendario h3 {
+        font-family: 'Playfair Display', serif;
+        color: #3a5a28;
+        margin-bottom: 16px;
+    }
+    .calendarioNav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+    .calendarioNav button {
+        background-color: #3a5a28;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 6px 16px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .calendarioNav span {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px;
+        color: #3a5a28;
+    }
+    .calendarioGrid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+    }
+    .diaSemana {
+        text-align: center;
+        font-weight: 700;
+        font-size: 12px;
+        color: #555;
+        padding: 6px 0;
+    }
+    .diaChale {
+        border-radius: 8px;
+        padding: 8px 4px;
+        min-height: 40px;
+        text-align: center;
+        font-size: 13px;
+    }
+    .diaChale.vazio{ background: transparent; }
+    .diaChale.livre{ background-color: #b2d9aa; }
+    .diaChale.ocupado{ background-color: #e8a0a0; }
+    .diaChale.passado{
+        background-color: #e0ddd6; 
+        color: #999;
+    }
+    .legendaCalendario{
+        display: flex;
+        gap: 16px;
+        margin-bottom: 12px;
+    }
+    .legenda {
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+    }
+    .legenda.livre { background-color: #b2d9aa; }
+    .legenda.ocupado { background-color: #e8a0a0; }
+    .legenda.passado{
+        background-color: #e0ddd6;
+        color: #999;
+    }
 
 
     footer { background-color: #d9d6cf; padding: 48px; }
