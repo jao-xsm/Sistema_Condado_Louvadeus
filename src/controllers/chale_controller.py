@@ -102,6 +102,16 @@ def excluir_chale(db, chale_id: int, anfitriao_id: int):
             status_code=status.HTTP_404_NOT_FOUND, 
             detail="Chalé não encontrado."
         )
+    reserva_existente = db.query(Reserva).filter(Reserva.chale_id == chale_id).first()
+    
+    if reserva_existente:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Este chalé possui histórico de reservas e não pode ser excluído permanentemente. Utilize a função de desativar."
+        )
+    db.delete(chale)
+    db.commit()
+    return {"mensagem": "Chalé excluído com sucesso do banco de dados."}
     
 def deletar_foto_chale(db, chale_id: int, foto_id: int, anfitriao_id: int):
     chale = db.query(Chale).filter(Chale.id == chale_id, Chale.anfitriao_id == anfitriao_id).first()
