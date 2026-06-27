@@ -62,9 +62,14 @@ async function confirmarReserva(chaleId, valorDiaria) {
 
     const checkin = document.getElementById('checkin').value;
     const checkout = document.getElementById('checkout').value;
+    const diaAtual = new Date().toISOString().split('T')[0];
 
     if (!checkin || !checkout) {
         alert('Escolha as datas de check-in e check-out!');
+        return;
+    }
+    if(checkin < diaAtual){
+        alert('Não é possivel reservar uma data no passado!');
         return;
     }
     if (checkout <= checkin) {
