@@ -149,8 +149,11 @@ def deletar_foto_chale(db, chale_id: int, foto_id: int, anfitriao_id: int):
     db.commit()
     return {"mensagem": "Chalé excluído com sucesso do banco de dados."}
 
-def listar_chales(db: Session):
-    return db.query(Chale).options(joinedload(Chale.fotos)).filter(Chale.ativo==True).all()
+def listar_chales_ativos(db: Session):
+    return db.query(Chale).options(joinedload(Chale.fotos)).filter(Chale.ativo==True).all() 
+
+# def listar_todos_chales(db: Session):
+#     return db.query(Chale).options(joinedload(Chale.fotos)).all()
 
 def listar_todos_chales(db: Session):
     return db.query(Chale).options(joinedload(Chale.fotos)).all()
