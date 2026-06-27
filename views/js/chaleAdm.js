@@ -20,11 +20,18 @@ async function carregarChaleAdm() {
      
     const main = document.getElementById('conteudoAdm');
 
-    const todasFotos = [chale.foto_capa, ...chale.fotos.map(f => f.url)];
-    while (todasFotos.length < 6) todasFotos.push(chale.foto_capa);
+    const todasFotos = [
+        { url: chale.foto_capa, id: null },
+        ...chale.fotos.map(f => ({ url: f.url, id: f.id }))
+    ];
+    while (todasFotos.length < 6) todasFotos.push({ url: chale.foto_capa, id: null });
     const fotosHtml = todasFotos.slice(0, 6)
-        .map(url => `<img src="${url}" alt="foto">`)
-        .join('');
+        .map((foto, i) => `
+            <div class="fotoWrapper">
+                <img src="${foto.url || foto}" alt="foto">
+                ${foto.id ? `<button class="btnRemoverFoto" onclick="removerFoto(${chale.id}, ${foto.id})">✕</button>` : ''}
+            </div>
+        `).join('');
 
     main.innerHTML = `
         <div class="cardFotos">
@@ -46,6 +53,10 @@ async function carregarChaleAdm() {
                 <label>Descrição:</label>
                 <textarea id="novaDescricao">${chale.descricao}</textarea>
             </div>
+            <div class="campoEditar">
+                <label>Adicionar fotos:</label>
+                <input type="file" id="fotosNovas" accept="image/*" multiple>
+            </div>
             <button class="btnSalvar" onclick="salvarEdicao(${chale.id})">Salvar alterações</button>
         </section>
 
@@ -53,7 +64,24 @@ async function carregarChaleAdm() {
             <button class="btnExcluir" onclick="excluirChale(${chale.id})">Excluir Chalé</button>
         </section>
     `;
+}
 
+async function removerFoto(chaleId, fotoId) {
+    if (!confirm('Remover esta foto?')) return;
+
+    const token = localStorage.getItem('token');
+    const resposta = await fetch(`${API}/chales/${chaleId}/fotos/${fotoId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if(resposta.ok) {
+        alert('Foto removida com sucesso!');
+        carregarChaleAdm();
+    } else{
+        const dados = await resposta.json();
+        alert(dados.detail || 'Erro ao remover foto.');
+    }
 }
 
 async function criacaoChaleAdm() {
@@ -124,10 +152,13 @@ async function criarChale() {
 
 
     if(!nome || !camas || !preco || !descricao || fotoCapaInput.files.length === 0){
-        alert('Preencha todos os campos e adicione uma foto de capa!');
+        alert('Preencha todos os campos e adicione pelo menos uma foto de capa!');
         return;
     }
-
+    if(preco<0){
+        alert('O preço não pode ser neativo!');
+        return;
+    }
     if (descricao.length < 15) {
         alert('A descrição deve ter pelo menos 15 caracteres!');
         return;
@@ -164,6 +195,26 @@ async function salvarEdicao(chaleId) {
     const token = localStorage.getItem('token');
     const novoPreco = document.getElementById('novoPreco').value;
     const novaDescricao = document.getElementById('novaDescricao').value;
+    const fotosNovasInput = document.getElementById('fotosNovas');
+    const fotosNovasBase64 = [];
+
+    for (const arquivo of fotosNovasInput.files) {
+        const base64 = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(arquivo);
+        });
+        fotosNovasBase64.push(base64);
+    }
+
+    if(novoPreco<0){
+        alert('O preço não pode ser neativo!');
+        return;
+    }
+    if (novaDescricao.length < 15) {
+        alert('A descrição deve ter pelo menos 15 caracteres!');
+        return;
+    }
 
     const resposta = await fetch(`${API}/chales/${chaleId}`, {
         method: 'PATCH',
@@ -173,12 +224,14 @@ async function salvarEdicao(chaleId) {
         },
         body: JSON.stringify({
             val_diaria: parseFloat(novoPreco),
-            descricao: novaDescricao
+            descricao: novaDescricao,
+            fotos: fotosNovasBase64
         })
     });
 
     if(resposta.ok){
         alert('Chalé atualizado com sucesso!');
+        window.location.href = 'acomodacoes.html';
     } else {
         const dados = await resposta.json();
         alert(dados.detail || 'Erro ao atualizar.');
@@ -186,8 +239,9 @@ async function salvarEdicao(chaleId) {
 }
 
 async function excluirChale(chaleId) {
-    if(!confirm('Tem certeza que deseja excluir esta chalé?')) return;
-    
+    if(!confirm('Tem certeza que deseja excluir esta chalé?')){
+        return;
+    }
     const token = localStorage.getItem('token');
 
     const resposta = await fetch(`${API}/chales/${chaleId}`, {
@@ -196,11 +250,13 @@ async function excluirChale(chaleId) {
     });
 
     if(resposta.ok){
-        alert('Chalé excluido com sucesso"');
+        alert('Chalé excluido com sucesso!');
         window.location.href = 'acomodacoes.html';
     } else{
         const dados = await resposta.json();
-        alert(dados.detail || 'Erro ao excluir.');
+        alert(dados.detail === "Chalé não encontrado." 
+            ? 'Você não tem permissão para excluir este chalé.' 
+            : dados.detail || 'Erro ao excluir.');
     }
 }
 
