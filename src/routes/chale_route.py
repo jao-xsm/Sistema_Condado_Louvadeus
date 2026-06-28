@@ -47,14 +47,10 @@ def cadastrar_chale(chale_data: ChaleCreate, db: Session = Depends(get_db), anfi
 
 @router.get("/", response_model=List[ChaleResponse], status_code=status.HTTP_200_OK)
 def listar_chales(db: Session = Depends(get_db)):
-    return chale_controller.listar_chales_ativos(db=db)
+    return chale_controller.listar_chales(db=db)
 
 @router.get("/todos", response_model=List[ChaleResponse])
 def listar_todos_chales(db: Session = Depends(get_db), anfitriao: dict = Depends(obter_anfitriao_atual)):
-    return chale_controller.listar_todos_chales(db=db)
-
-@router.get("/gerenciamento", response_model=List[ChaleResponse], status_code=status.HTTP_200_OK)
-def listar_chales_para_anfitriao(db: Session = Depends(get_db), anfitriao_atual = Depends(obter_anfitriao_atual)):
     return chale_controller.listar_todos_chales(db=db)
 
 @router.get("/{chale_id}", response_model=ChaleResponse, status_code=status.HTTP_200_OK)
