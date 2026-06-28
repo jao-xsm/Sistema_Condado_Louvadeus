@@ -25,11 +25,21 @@ async function carregarChale() {
     const fotosHtml = todasFotos.slice(0, 6)
         .map(url => `<img src="${url}" alt="foto">`)
         .join('');
+
+    let mediaAvaliacao = '--';   // busca média de avaliação
+    try {
+        const respostaMedia = await fetch(`${API}/avaliacoes/chale/${chale.id}/media`);
+        if (respostaMedia.ok) {
+            const dadosMedia = await respostaMedia.json();
+            mediaAvaliacao = dadosMedia.media ?? '--';
+        }
+    } catch (e) {}
+
     main.innerHTML = `
         <div class="cardFotos">
             <div class="cardInfo">
                 <h2>${chale.nome}</h2>
-                <p>Avaliação: __ / 5.0</p>
+                <p>Avaliação: ${mediaAvaliacao} / 5.0</p>
             </div>
             <div class="gridFotos">
                 ${fotosHtml}
@@ -71,8 +81,13 @@ async function carregarChale() {
                 Reservar
             </button>
         </section>
+
+        <section id="secaoAvaliacoes">
+            
+        </section>
     `;
     carregarDisponibilidade(chale.id);
+    carregarAvaliacoes(chale.id);
 }
 
 async function carregarDisponibilidade(chaleId) {
@@ -187,6 +202,28 @@ function calcularTotal(valorDiaria) {
         document.getElementById('totalValor').textContent = 
             `${dias} noite${dias > 1 ? 's' : ''} × R$ ${valorDiaria} = R$ ${dias * valorDiaria}`;
     }
+}
+
+async function carregarAvaliacoes(chaleId){
+    const respostaMedia = await fetch(`${API}/avaliacoes/chale/${chaleId}/media`);
+    const media = await respostaMedia.json();
+    const respostaComentarios = await fetch(`${API}/avaliacoes/chale/${chaleId}/lista`);
+    const comentarios = await respostaComentarios.json();
+    const secao = document.getElementById('secaoAvaliacoes');
+
+    const comentariosHtml = comentarios.length === 0 ? '<p>Ainda não há nenhuma avaliação.</p>' : comentarios.map(
+        a => `
+            <div class="cardAvaliacao">
+                <p class="notaAvaliacao">Avaliação: ${a.nota} / 5.0</p>
+                <p>${a.comentario || ''}</p>
+            </div>
+        `).join('');
+
+    secao.innerHTML = `
+        <h3>Avaliações</h3>
+        <p class="mediaGeral">Média: ${media.media ?? '--'} / 5.0</p>
+        ${comentariosHtml}
+    `;
 }
 
 carregarChale();

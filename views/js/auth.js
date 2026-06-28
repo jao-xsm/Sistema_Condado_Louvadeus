@@ -117,7 +117,7 @@ async function salvarPerfil() {
     const token = localStorage.getItem('token');
     const tipo = localStorage.getItem('tipo_usuario');
 
-    const prefixo = tipo == 'anfitrião' ? 'Adm' : '';
+    const prefixo = tipo == 'anfitriao' ? 'Adm' : '';
 
     const nome = document.getElementById(`nome${prefixo}`).value;
     const telefone = document.getElementById(`telefone${prefixo}`).value;
@@ -158,7 +158,7 @@ async function salvarPerfil() {
 
     if (resposta.ok) {
         alert('Perfil atualizado com sucesso!');
-        carregarPerfil();
+        setTimeout(() => carregarPerfil(), 500);
     } else {
         alert(dados.detail || 'Erro ao atualizar perfil.');
     }
@@ -187,6 +187,8 @@ async function carregarReservas() {
     lista.innerHTML = '';
     reservas.forEach(r => {
         const podeCancelar = r.status !== 'CANCELADA' && r.status !== 'FINALIZADA';
+        const podeAvaliar = r.status === 'Concluída';
+
         lista.innerHTML += `
             <div class="cardReserva">
                 <p><strong>Chalé:</strong> ${r.chale_id}</p>
@@ -196,8 +198,11 @@ async function carregarReservas() {
                 <p><strong>Total:</strong> R$ ${r.valor_total}</p>
                 <div class="botoesReserva">
                     ${podeCancelar ? `
-                        <button class="btnEditarReserva" onclick="abrirEdicaoReserva(${r.id}, '${r.data_checkin}', '${r.data_checkout}')">Editar datas</button>
-                        <button class="btnCancelarReserva" onclick="cancelarReserva(${r.id})">Cancelar reserva</button>
+                        <button class="btnEditarReserva" onclick="abrirEdicaoReserva(${r.id}, '${r.data_checkin}', '${r.data_checkout}')">Editar datas </button>
+                        <button class="btnCancelarReserva" onclick="cancelarReserva(${r.id})">Cancelar reserva </button>  
+                    ` : ''}
+                    ${podeAvaliar ? `
+                        <button class= "btnAvaliarReserva" onclick="abrirAvaliacaoReserva(${r.chale_id})">Avaliar estadia</button>    
                     ` : ''}
                 </div>
             </div>
@@ -205,7 +210,49 @@ async function carregarReservas() {
     });
 }
 
-async function cancelarReserva(reservaId) {
+function abrirAvaliacaoReserva(chaleId) {
+    document.getElementById('modalChaleId').value = chaleId;
+    document.getElementById('modalNota').value = '';
+    document.getElementById('modalComentario').value = '';
+    document.getElementById('overlayAvaliacao').classList.remove('hidden');
+}
+function fecharModalAvaliacao() {
+    document.getElementById('overlayAvaliacao').classList.add('hidden');
+}
+async function enviarAvaliacao() {
+    const token = localStorage.getItem('token');
+    const chaleId = document.getElementById('modalChaleId').value;
+    const nota = document.getElementById('modalNota').value;
+    const comentario = document.getElementById('modalComentario').value;
+
+    if (!nota || nota < 1 || nota > 5) {
+        alert('Dê uma nota de 1 a 5!');
+        return;
+    }
+
+    const resposta = await fetch(`${API}/avaliacoes/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            chale_id: parseInt(chaleId),
+            nota: parseInt(nota),
+            comentario: comentario || null
+        })
+    });
+
+    const dados = await resposta.json();
+    if (resposta.ok) {
+        alert('Avaliação enviada com sucesso!');
+        fecharModalAvaliacao();
+    } else {
+        alert(dados.detail || 'Erro ao enviar avaliação.');
+    }
+}
+
+async function cancelarReserva(reservaId){
     if (!confirm('Tem certeza que deseja cancelar esta reserva?')) return;
 
     const token = localStorage.getItem('token');
@@ -223,7 +270,7 @@ async function cancelarReserva(reservaId) {
     }
 }
 
-function abrirEdicaoReserva(reservaId, checkinAtual, checkoutAtual) {
+function abrirEdicaoReserva(reservaId, checkinAtual, checkoutAtual){
     document.getElementById('modalReservaId').value = reservaId;
     document.getElementById('modalCheckin').value = checkinAtual;
     document.getElementById('modalCheckout').value = checkoutAtual;

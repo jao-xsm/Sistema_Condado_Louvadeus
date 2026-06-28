@@ -85,7 +85,7 @@ async function alterarDisponibilidade(chaleId, ativoAtual) {
 
     if (resposta.ok) {
         alert(novoStatus ? 'Chalé ativado!' : 'Chalé desativado!');
-        carregarChaleAdm();
+        window.location.href = "acomodacoes.html";
     } else {
         const dados = await resposta.json();
         alert(dados.detail || 'Erro ao alterar disponibilidade.');
