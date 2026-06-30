@@ -3,29 +3,57 @@ const API = 'http://localhost:8000';
 let mesCalendario = new Date().getMonth();
 let anoCalendario = new Date().getFullYear();
 let datasOcupadas = [];
+let fotosDoChale = [];
+let indiceFotoAberta = 0;
 
 const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
                 'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const diasSemana = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
+function abrirFoto(indice) {
+    indiceFotoAberta = indice;
+    document.getElementById('fotoAberta').src = fotosDoChale[indiceFotoAberta];
+    document.getElementById('overlayFoto').classList.remove('hidden');
+}
+function fecharFoto() {
+    document.getElementById('overlayFoto').classList.add('hidden');
+}
+function fotoAnterior() {
+    indiceFotoAberta = (indiceFotoAberta - 1 + fotosDoChale.length) % fotosDoChale.length;
+    document.getElementById('fotoAberta').src = fotosDoChale[indiceFotoAberta];
+}
+function proximaFoto() {
+    indiceFotoAberta = (indiceFotoAberta + 1) % fotosDoChale.length;
+    document.getElementById('fotoAberta').src = fotosDoChale[indiceFotoAberta];
+}
+
 async function carregarChale() {
     const parametros = new URLSearchParams(window.location.search);
     const id = parametros.get('id');
 
+    if (!id) {
+        window.location.href = 'acomodacoes.html';
+        return;
+    }
+
     const resposta = await fetch(`${API}/chales/${id}`);
+    if (!resposta.ok) {
+        const erro = await resposta.json().catch(() => ({}));
+        alert(erro.detail || 'Chalé não encontrado.');
+        window.location.href = 'acomodacoes.html';
+        return;
+    }
     const chale = await resposta.json();
     
 
     const main = document.getElementById('conteudoChale');
 
     const todasFotos = [chale.foto_capa, ...chale.fotos.map(f => f.url)];
-    while (todasFotos.length < 6) {
-        todasFotos.push(chale.foto_capa);
-    }
-    const fotosHtml = todasFotos.slice(0, 6)
-        .map(url => `<img src="${url}" alt="foto">`)
-        .join('');
+    fotosDoChale = todasFotos;
 
+    const fotosPequenas = todasFotos.slice(1, 5) //4 peguenas
+    const fotosExtras = todasFotos.length - 5;   //quantidade de fotos extras
+    
     let mediaAvaliacao = '--';   // busca média de avaliação
     try {
         const respostaMedia = await fetch(`${API}/avaliacoes/chale/${chale.id}/media`);
@@ -35,14 +63,26 @@ async function carregarChale() {
         }
     } catch (e) {}
 
+    //&nbsp  -> espaço em branco
     main.innerHTML = `
-        <div class="cardFotos">
-            <div class="cardInfo">
-                <h2>${chale.nome}</h2>
-                <p>Avaliação: ${mediaAvaliacao} / 5.0</p>
+        <h2>${chale.nome}</h2>               
+        <p>Avaliação: ${mediaAvaliacao} / 5.0 &nbsp - &nbsp Diária: R$ ${chale.val_diaria}</p>
+
+        <div class="galeriaFotos${fotosPequenas.length === 0 ? ' semExtras' : ''}">
+            <div class="fotoGrande" onclick="abrirFoto(0)">
+                <img src="${todasFotos[0]}" alt="foto principal">
             </div>
-            <div class="gridFotos">
-                ${fotosHtml}
+            <div class="fotosPequenas">
+                ${fotosPequenas.map((url, i) => {
+                    const ehUltima = i === fotosPequenas.length - 1;
+                    const temMais = ehUltima && fotosExtras > 0;
+                    return `
+                        <div class="fotoPequena" onclick="abrirFoto(${i + 1})">
+                            <img src="${url}" alt="foto ${i + 2}">
+                            ${temMais ? `<div class="overlayMaisFotos">+${fotosExtras}</div>` : ''}
+                        </div>
+                    `;
+                }).join('')}
             </div>
         </div>
 

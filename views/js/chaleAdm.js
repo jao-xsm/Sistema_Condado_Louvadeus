@@ -15,7 +15,18 @@ async function carregarChaleAdm() {
     const parametros = new URLSearchParams(window.location.search);
     const id = parametros.get('id');
 
+    if (!id) {
+        criacaoChaleAdm();
+        return;
+    }
+
     const resposta = await fetch(`${API}/chales/${id}`);
+    if (!resposta.ok) {
+        const erro = await resposta.json().catch(() => ({}));
+        alert(erro.detail || 'Chalé não encontrado ou indisponível.');
+        window.location.href = 'acomodacoes.html';
+        return;
+    }
     const chale = await resposta.json();
      
     const main = document.getElementById('conteudoAdm');
@@ -33,11 +44,34 @@ async function carregarChaleAdm() {
             </div>
         `).join('');
 
+    let mediaAvaliacao = '--';   // busca média e avaliações
+    let avaliacoes = [];
+    try {
+        const respostaMedia = await fetch(`${API}/avaliacoes/chale/${id}/media`);
+        if (respostaMedia.ok) {
+            const dadosMedia = await respostaMedia.json();
+            mediaAvaliacao = dadosMedia.media ?? '--';
+        }
+        const respostaLista = await fetch(`${API}/avaliacoes/chale/${id}/lista`);
+        if (respostaLista.ok) {
+            avaliacoes = await respostaLista.json();
+        }
+    } catch (e) {}
+
+    const avaliacoesHtml = avaliacoes.length === 0
+        ? '<p>Nenhuma avaliação ainda.</p>'
+        : avaliacoes.map(a => `
+            <div class="cardAvaliacao">
+                <p class="notaAvaliacao">${a.nome_hospede} — ⭐ ${a.nota}/5.0</p>
+                <p>${a.comentario || ''}</p>
+            </div>
+        `).join('');
+
     main.innerHTML = `
         <div class="cardFotos">
             <div class="cardInfo">
                 <h2>${chale.nome}</h2>
-                <p>Avaliação: __ / 5.0</p>
+                <p>Avaliação: ${mediaAvaliacao} / 5.0</p>
             </div>
             <div class="gridFotos">
                 ${fotosHtml}
@@ -58,6 +92,11 @@ async function carregarChaleAdm() {
                 <input type="file" id="fotosNovas" accept="image/*" multiple>
             </div>
             <button class="btnSalvar" onclick="salvarEdicao(${chale.id})">Salvar alterações</button>
+        </section>
+
+        <section id="secaoAvaliacoesAdm">
+            <h3>Avaliações dos hóspedes</h3>
+            ${avaliacoesHtml}
         </section>
 
         <section class="secaoPerigo">

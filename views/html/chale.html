@@ -28,49 +28,65 @@
         max-width: 900px; 
         margin: 0 auto; 
     }
-    .cardFotos {
-        background-color: #b2d9aa;
-        border-radius: 25px;
-        padding: 30px;
-        display: flex;
-        align-items: center;
-        gap: 30px;
-        margin-bottom: 40px;
-    }
-    .cardInfo {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        min-width: 160px;
-    }
-    .cardInfo h2 {
+    h2{
         font-family: 'Playfair Display', serif;
         color: #3a5a28;
         font-size: 22px;
+        margin-bottom: 12px;
     }
-    .gridFotos {
+    h3 {
+        font-family: 'Playfair Display', serif;
+        color: #3a5a28;
+        margin-bottom: 12px;
+    }
+    p {
+        font-size: 14px;
+        color: #1a1a1a;
+        margin-bottom: 12px;
+    }
+    .galeriaFotos {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
         gap: 8px;
-        flex: 1;
+        overflow: hidden;
+        margin-bottom: 40px;
     }
-    .gridFotos img {
+    .fotoGrande {
+        cursor: pointer;
+        height: 400px;
+    }
+    .fotoGrande img {
         width: 100%;
-        height: 130px;
+        height: 100%;
         object-fit: cover;
-        border-radius: 10px;
+        display: block;
+    }
+    .fotosPequenas {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .fotoPequena {
+        cursor: pointer;
+        height: 196px;
+    }
+    .fotoPequena img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    @media (max-width: 770px) {
+        .galeriaFotos { grid-template-columns: 1fr; }
+        .fotoGrande { height: 250px; }
+        .fotosPequenas { grid-template-columns: 1fr 1fr; }
+        .fotoPequena { height: 120px; }
     }
     .secaoDescricao {
         background-color: #e0ddd6;
         border-radius: 20px;
         padding: 30px;
         margin-bottom: 30px;
-    }
-    .secaoDescricao h3 {
-        font-family: 'Playfair Display', serif;
-        color: #3a5a28;
-        margin-bottom: 12px;
     }
     .secaoReserva {
         display: flex;
@@ -109,11 +125,6 @@
     }
     .secaoCalendario {
         margin-bottom: 30px;
-    }
-    .secaoCalendario h3 {
-        font-family: 'Playfair Display', serif;
-        color: #3a5a28;
-        margin-bottom: 16px;
     }
     .calendarioNav {
         display: flex;
@@ -180,11 +191,6 @@
     #secaoAvaliacoes{
         margin-top: 30px;
     }
-    #secaoAvaliacoes h3 {
-        font-family: 'Playfair Display', serif;
-        color: #3a5a28;
-        margin-bottom: 12px;
-    }
     .mediaGeral {
         font-size: 16px;
         font-weight: 600;
@@ -199,6 +205,68 @@
     .notaAvaliacao {
         font-weight: 700;
         margin-bottom: 6px;
+    }
+    #overlayFoto {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0,0,0,0.9);
+        z-index: 200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .lightboxConteudo {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        max-width: 90vw;
+        max-height: 90vh;
+    }
+    #fotoAberta {
+        max-width: 80vw;
+        max-height: 85vh;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+    .lightboxFechar {
+        position: absolute;
+        top: -40px;
+        right: 0;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+    }
+    .lightboxNav {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        font-size: 28px;
+        padding: 12px 16px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .lightboxNav:hover {
+        background: rgba(255,255,255,0.4);
+    }
+    #overlayFoto.hidden{
+        display: none;
+    }
+    .fotosPequenas {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .fotosPequenas .fotoPequena:last-child:nth-child(odd) {
+        grid-column: span 2;
+    }
+    .galeriaFotos.semExtras {
+        grid-template-columns: 1fr;
+    }
+    .galeriaFotos.semExtras .fotoGrande {
+        height: 500px;
     }
 
 
@@ -282,6 +350,15 @@
             linkLoginFooter.href = 'perfil.html';
         }
     </script>
+
+    <div id="overlayFoto" class="hidden">
+        <div class="lightboxConteudo">
+            <button class="lightboxFechar" onclick="fecharFoto()">✕</button>
+            <button class="lightboxNav esquerda" onclick="fotoAnterior()">❮</button>
+            <img id="fotoAberta" src="" alt="foto ampliada">
+            <button class="lightboxNav direita" onclick="proximaFoto()">❯</button>
+        </div>
+    </div>
 
 </body>
 </html>
